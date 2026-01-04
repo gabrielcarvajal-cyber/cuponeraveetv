@@ -1,12 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cuponera Veetv</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:0;background:#f6f6f6;color:#111}
+    .wrap{max-width:720px;margin:48px auto;padding:24px}
+    .card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+    h1{margin:0 0 8px}
+    p{line-height:1.5}
+    .price{font-size:28px;font-weight:700;margin:14px 0}
+    button{width:100%;padding:14px 16px;border:0;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer}
+    button{background:#111;color:#fff}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .small{font-size:13px;opacity:.8;margin-top:10px}
+  </style>
 </head>
 <body>
-  <h1>Cuponera Veetv</h1>
-  <p>La cuponera está en construcción.</p>
+  <div class="wrap">
+    <div class="card">
+      <h1>Cuponera Veetv</h1>
+      <p>Acceso a beneficios de comercios locales para suscriptores.</p>
+
+      <div class="price">$3.800 / mes</div>
+
+      <button id="btn">Suscribirme</button>
+      <div class="small" id="msg"></div>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById("btn");
+    const msg = document.getElementById("msg");
+
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      msg.textContent = "Abriendo pago…";
+
+      // ESTE LINK lo vamos a reemplazar en el Paso 2 por el link real de Stripe/MercadoPago
+      const checkoutUrl = "/api/checkout";
+
+      try {
+        const res = await fetch(checkoutUrl, { method: "POST" });
+        if (!res.ok) throw new Error("No se pudo iniciar el pago");
+        const data = await res.json();
+        window.location.href = data.url; // redirige al checkout real
+      } catch (e) {
+        msg.textContent = "Pago aún no configurado. Siguiente paso: pasarela.";
+        btn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
+
 
